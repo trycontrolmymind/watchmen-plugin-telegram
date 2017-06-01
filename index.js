@@ -20,7 +20,7 @@ var eventHandlers = {
   onNewOutage: function (service, outage) {
     var errorMsg = service.name + ' down!'.red + '. Error: ' + JSON.stringify(outage.error).red;
     console.log(errorMsg);
-    bot.sendMessage(errorMsg);
+    bot.sendMessage(CHAT_ID, errorMsg);
   },
 
   /**
@@ -34,7 +34,7 @@ var eventHandlers = {
   onCurrentOutage: function (service, outage) {
     var errorMsg = service.name + ' is still down!'.red + '. Error: ' + JSON.stringify(outage.error).red;
     console.log(errorMsg);
-    bot.sendMessage(errorMsg);
+    bot.sendMessage(CHAT_ID, errorMsg);
 
   },
 
@@ -49,7 +49,7 @@ var eventHandlers = {
   onFailedCheck: function (service, data) {
     var errorMsg = service.name + ' check failed!'.red + '. Error: ' + JSON.stringify(data.error).red;
     console.log(errorMsg);
-    bot.sendMessage(errorMsg);
+    bot.sendMessage(CHAT_ID, errorMsg);
 
   },
 
@@ -63,7 +63,7 @@ var eventHandlers = {
   onLatencyWarning: function (service, data) {
     var msg = service.name + ' latency warning'.yellow + '. Took: ' + (data.elapsedTime + ' ms.').yellow;
     console.log(msg);
-    bot.sendMessage(msg);
+    bot.sendMessage(CHAT_ID, msg);
 
   },
 
@@ -77,9 +77,8 @@ var eventHandlers = {
 
   onServiceBack: function (service, lastOutage) {
     var duration = moment.duration(+new Date() - lastOutage.timestamp, 'seconds');
-    console.log(service.name.white + ' is back'.green + '. Down for '.gray + duration.humanize().white);
-    // bot.sendMessage(errorMsg);
-
+    var msg = service.name.white + ' is back'.green + '. Down for '.gray + duration.humanize().white;
+    bot.sendMessage(CHAT_ID, msg);
   },
 
   /**
