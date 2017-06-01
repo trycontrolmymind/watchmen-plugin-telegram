@@ -1,0 +1,23 @@
+{
+  "name": "watchman-plugin-telegram",
+  "version": "0.0.1",
+  "description": "Telegram plugin for watchmen",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vlaad360/watchman-plugin-telegram.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/vlaad360/watchman-plugin-telegram/issues"
+  },
+  "homepage": "https://github.com/vlaad360/watchman-plugin-telegram#readme",
+  "dependencies": {
+    "moment": "^2.18.1",
+    "tgfancy": "^0.10.0"
+  }
+}
