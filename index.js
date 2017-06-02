@@ -9,7 +9,6 @@ var CHAT_ID = process.env.WATCHMEN_CHAT_ID;
 
 const bot = new TgFancy(TELEGRAM_TOKEN);
 var eventHandlers = {
-
     /**
      * On a new outage
      * @param {Object} service
@@ -18,8 +17,8 @@ var eventHandlers = {
      * @param {number} outage.timestamp outage timestamp
      */
     onNewOutage: function (service, outage) {
-        var errorMsg = service.name + ' down!' + '. Error: ' + JSON.stringify(outage.error);
-        bot.sendMessage(CHAT_ID, errorMsg);
+        var errorMsg = service.name + ' down!. Error: ' + JSON.stringify(outage.error);
+        _telegramSend(errorMsg);
     },
 
     /**
@@ -30,8 +29,8 @@ var eventHandlers = {
      * @param {number} outage.timestamp outage timestamp
      */
     onCurrentOutage: function (service, outage) {
-        var errorMsg = service.name + ' is still down!' + '. Error: ' + JSON.stringify(outage.error);
-        bot.sendMessage(CHAT_ID, errorMsg);
+        var errorMsg = service.name + ' is still down!. Error: ' + JSON.stringify(outage.error);
+        _telegramSend(errorMsg);
     },
 
     /**
@@ -42,8 +41,8 @@ var eventHandlers = {
      * @param {number} data.currentFailureCount number of consecutive check failures
      */
     onFailedCheck: function (service, data) {
-        var errorMsg = service.name + ' check failed!' + '. Error: ' + JSON.stringify(data.error);
-        bot.sendMessage(CHAT_ID, errorMsg);
+        var errorMsg = service.name + ' check failed!. Error: ' + JSON.stringify(data.error);
+        _telegramSend(errorMsg);
     },
 
     /**
@@ -52,10 +51,9 @@ var eventHandlers = {
      * @param {Object} data
      * @param {number} data.elapsedTime (ms)
      */
-
     onLatencyWarning: function (service, data) {
-        var msg = service.name + ' latency warning' + '. Took: ' + (data.elapsedTime + ' ms.');
-        bot.sendMessage(CHAT_ID, msg);
+        var msg = service.name + ' latency warning. Took: ' + (data.elapsedTime + ' ms.');
+        _telegramSend(msg);
     },
 
     /**
@@ -65,13 +63,20 @@ var eventHandlers = {
      * @param {Object} lastOutage.error
      * @param {number} lastOutage.timestamp (ms)
      */
-
     onServiceBack: function (service, lastOutage) {
         var duration = moment.duration(moment().unix() - lastOutage.timestamp, 'seconds');
-        var msg = service.name + ' is back' + '. Down for ' + duration.humanize();
-        bot.sendMessage(CHAT_ID, msg);
+        var msg = service.name + ' is back. Down for ' + duration.humanize();
+        _telegramSend(msg);
     }
 };
+/**
+ * Send message using Telegram
+ * @param {string} msg Message to send
+ * @private
+ */
+function _telegramSend(msg) {
+    bot.sendMessage(CHAT_ID, msg);
+}
 
 function TelegramPlugin(watchmen) {
     watchmen.on('new-outage', eventHandlers.onNewOutage);
