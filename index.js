@@ -4,8 +4,9 @@
 var moment = require('moment');
 var TgFancy = require('tgfancy');
 
-var TELEGRAM_TOKEN = process.env.WATCHMEN_TELEGRAM_TOKEN;
-var CHAT_ID = process.env.WATCHMEN_CHAT_ID;
+var TELEGRAM_TOKEN = process.env.WATCHMEN_TELEGRAM_TOKEN || null;
+var CHAT_ID = process.env.WATCHMEN_CHAT_ID || null;
+var ENABLE_LATENCY_WARNING = process.env.WATCHMEN_TELEGRAM_LATENCY_WARNING || true;
 
 const bot = new TgFancy(TELEGRAM_TOKEN);
 var eventHandlers = {
@@ -75,6 +76,8 @@ var eventHandlers = {
  * @private
  */
 function _telegramSend(msg) {
+    if (!TELEGRAM_TOKEN) return console.log("Please set the environment variable WATCHMEN_TELEGRAM_TOKEN");
+    if (!CHAT_ID) return console.log("Please set the environment variable WATCHMEN_CHAT_ID");
     bot.sendMessage(CHAT_ID, msg);
 }
 
@@ -83,7 +86,8 @@ function TelegramPlugin(watchmen) {
     watchmen.on('current-outage', eventHandlers.onCurrentOutage);
     watchmen.on('service-error', eventHandlers.onFailedCheck);
 
-    watchmen.on('latency-warning', eventHandlers.onLatencyWarning);
+    if (ENABLE_LATENCY_WARNING)
+        watchmen.on('latency-warning', eventHandlers.onLatencyWarning);
     watchmen.on('service-back', eventHandlers.onServiceBack);
 }
 
